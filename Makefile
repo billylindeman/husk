@@ -1,18 +1,20 @@
 
 
 boot:
-	i686-elf-as boot.s -o boot.o
+	mkdir -p build/
+	i686-elf-as src/boot.s -o build/boot.o
 
 kernel:
-	i686-elf-g++ -c kernel.cc -o kernel.o -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
+	mkdir -p build/
+	i686-elf-g++ -c src/kernel.cc -o build/kernel.o -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
 
 clean:
-	rm -f *.o
-	rm -f bos.bin
+	rm -fr build/
 
 all: clean boot kernel
-	i686-elf-gcc -T linker.ld -o bos.bin -ffreestanding -O2 -nostdlib boot.o kernel.o -lgcc
+	mkdir -p build/
+	i686-elf-gcc -T linker.ld -o build/husk-kernel.bin -ffreestanding -O2 -nostdlib build/*.o -lgcc
 
 
 run:
-	qemu-system-i386 -kernel bos.bin
+	qemu-system-i386 -kernel build/husk-kernel.bin
