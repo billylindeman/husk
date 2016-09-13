@@ -3,11 +3,12 @@
 
 SRC_PATH := "./src"
 
+#INCLUDE CONFIG
+#  recursively adds dir's to include root
+INCLUDE += -I"$(SRC_PATH)"
+INCLUDE += $(foreach dir, $(shell find $(SRC_PATH) -type d), -I"$(dir)")
 
 #OBJECT CONFIG
-INCLUDEPATHS += -I"$(SRC_PATH)"
-INCLUDEPATHS += $(foreach dir, $(shell find $(SRC_PATH) -type d), -I"$(dir)")
-
 OBJS = $(patsubst %.c,%.o, $(shell find $(SRC_PATH) -type f -name *.c))
 OBJS += $(patsubst %.cc,%.o, $(shell find $(SRC_PATH) -type f -name *.cc))
 OBJS += $(patsubst %.s,%.o, $(shell find $(SRC_PATH) -type f -name *.s))
@@ -27,10 +28,10 @@ LD  := $(TARGET)ld
 
 ## OBJECT TARGETS
 %.o: %.c
-	${CC} ${CFLAGS} -c $< -o $@
+	${CC} ${CFLAGS} ${INCLUDE} -c $< -o $@
 
 %.o: %.cc
-	${CXX} ${CFLAGS} ${CXXFLAGS} -c $< -o $@
+	${CXX} ${CFLAGS} ${CXXFLAGS} ${INCLUDE} -c $< -o $@
 
 %.o: %.s
 	${AS} $< -o $@
