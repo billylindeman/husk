@@ -1,20 +1,47 @@
 
 
-boot:
-	mkdir -p build/
-	i686-elf-as src/boot.s -o build/boot.o
 
-kernel:
-	mkdir -p build/
-	i686-elf-g++ -c src/kernel.cc -o build/kernel.o -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti
 
-clean:
-	rm -fr build/
+#OBJECT CONFIG
+OBJS  = $(patsubst %.c,%.o,$(wildcard src/*.c))
+OBJS += $(patsubst %.c,%.o,$(wildcard src/*/*.c))
+OBJS += $(patsubst %.cc,%.o,$(wildcard src/*.cc))
+OBJS += $(patsubst %.cc,%.o,$(wildcard src/*/*.cc))
+OBJS += $(patsubst %.s,%.o,$(wildcard src/*.s))
 
-all: clean boot kernel
-	mkdir -p build/
-	i686-elf-gcc -T linker.ld -o build/husk-kernel.bin -ffreestanding -O2 -nostdlib build/*.o -lgcc
+#TOOLCHAIN CONFIG
+CFLAGS   := -std=c++11 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -fpermissive
+CXXFLAGS :=
 
+TARGET := i686-elf-
+AS  := $(TARGET)as
+CC  := $(TARGET)gcc
+CXX := $(TARGET)g++
+CPP := $(TARGET)cpp
+LD  := $(TARGET)ld
+
+## OBJECT TARGETS
+%.o: %.c
+	${CC} ${CFLAGS} -c $< -o $@
+
+%.o: %.cc
+	${CXX} ${CFLAGS} ${CXXFLAGS} -c $< -o $@
+
+%.o: %.s
+	${AS} $< -o $@
+
+
+
+## OTHER TARGETS
+husk-kernel: ${OBJS}
+	$(CXX) ${CFLAGS} ${CXXFLAGS}-T linker.ld -o $(@).bin ${OBJS}
 
 run:
-	qemu-system-i386 -kernel build/husk-kernel.bin
+	qemu-system-i386 -kernel husk-kernel.bin
+
+all: husk-kernel
+
+.PHONY: clean
+clean:
+	-rm -f src/*.o src/*/*.o src/*/*/*o
+	-rm -f husk-kernel

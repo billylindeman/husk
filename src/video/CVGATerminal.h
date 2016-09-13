@@ -1,7 +1,11 @@
 #ifndef VGATERMINAL_H
 #define VGATERMINAL_H
 
-#include <tuple>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+
+#include "../string.h"
 
 typedef enum kVgaColor {
 	kVgaColorBlack = 0,
@@ -22,19 +26,50 @@ typedef enum kVgaColor {
 	kVgaColorLightWhite = 15,
 } kVgaColor;
 
+static const int kVGATerminalWidth = 80;
+static const int kVGATerminalHeight = 25;
+
 typedef struct {
     uint8_t character;
     uint8_t color;
-} TerminalChar;
-uint8_t makeColor(uint8_t fg, uint8_t bg);
 
+    inline void setColor(uint8_t fg, uint8_t bg) {
+		color = fg | bg << 4;
+	}
+
+	inline void setChar(char c) {
+		character = c;
+	}
+} TermChar;
+
+
+typedef struct {
+	uint8_t x;
+	uint8_t y;
+
+	inline uint16_t index();
+	inline void move(uint8_t x, uint8_t y);
+	inline void nextLine();
+	inline void increment();
+	inline void updateBiosCursorReference();
+} Cursor;
 
 class CVGATerminal {
-    static const kWidth = 80;
-    static const KHeight = 25;
+private:
+	TermChar* _buffer;
 
+	void updateBiosCursorReference();
+public:
+	Cursor cursor;
+
+	void init();
+	void putChar(char c);
+    void moveCursor(uint8_t x, uint8_t y);
+    void printf(char *str);
+    void clear();
 
 };
 
 extern CVGATerminal VGATerminal;
+
 #endif
