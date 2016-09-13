@@ -13,7 +13,8 @@ OBJS = $(patsubst %.c,%.o, $(shell find $(SRC_PATH) -type f -name *.c))
 OBJS += $(patsubst %.cc,%.o, $(shell find $(SRC_PATH) -type f -name *.cc))
 OBJS += $(patsubst %.s,%.o, $(shell find $(SRC_PATH) -type f -name *.s))
 
-
+OBJS += $(shell $(CC) $(CFLAGS) -print-file-name=crtbegin.o)
+OBJS += $(shell $(CC) $(CFLAGS) -print-file-name=crtend.o)
 
 #TOOLCHAIN CONFIG
 CFLAGS   := -std=c++11 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -fpermissive
