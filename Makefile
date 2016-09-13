@@ -1,13 +1,18 @@
 
 
 
+SRC_PATH := "./src"
+
 
 #OBJECT CONFIG
-OBJS  = $(patsubst %.c,%.o,$(wildcard src/*.c))
-OBJS += $(patsubst %.c,%.o,$(wildcard src/*/*.c))
-OBJS += $(patsubst %.cc,%.o,$(wildcard src/*.cc))
-OBJS += $(patsubst %.cc,%.o,$(wildcard src/*/*.cc))
-OBJS += $(patsubst %.s,%.o,$(wildcard src/*.s))
+INCLUDEPATHS += -I"$(SRC_PATH)"
+INCLUDEPATHS += $(foreach dir, $(shell find $(SRC_PATH) -type d), -I"$(dir)")
+
+OBJS = $(patsubst %.c,%.o, $(shell find $(SRC_PATH) -type f -name *.c))
+OBJS += $(patsubst %.cc,%.o, $(shell find $(SRC_PATH) -type f -name *.cc))
+OBJS += $(patsubst %.s,%.o, $(shell find $(SRC_PATH) -type f -name *.s))
+
+
 
 #TOOLCHAIN CONFIG
 CFLAGS   := -std=c++11 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -fpermissive

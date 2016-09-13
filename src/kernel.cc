@@ -21,4 +21,8 @@ void kernel_main(void) {
 	VGATerminal.printf("This is a test\n");
 	VGATerminal.printf("This is a test\n");
 	VGATerminal.printf("This is a test\n");
+
+	for(;;) {
+		asm("hlt");
+	}
 }
