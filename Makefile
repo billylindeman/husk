@@ -17,7 +17,7 @@ OBJS += $(shell $(CC) $(CFLAGS) -print-file-name=crtbegin.o)
 OBJS += $(shell $(CC) $(CFLAGS) -print-file-name=crtend.o)
 
 #TOOLCHAIN CONFIG
-CFLAGS   := -std=c++11 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -fpermissive
+CFLAGS   := -std=c++11 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -fpermissive -g
 CXXFLAGS :=
 
 TARGET := i686-elf-

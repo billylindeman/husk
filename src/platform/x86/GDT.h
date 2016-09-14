@@ -1,38 +1,31 @@
 #ifndef GDT_H
 #define GDT_H
 
-struct GDTRecord {
+#include <stdint.h>
+
+typedef struct {
     uint16_t size;
     uint32_t offset;
-};
-
+} __attribute__((__packed__)) GDTDescriptorType;
 
 typedef struct {
     uint8_t data[8];
 
-    inline void base(uint32_t base) {
-        data[2] = source.base & 0xFF;
-        data[3] = (source.base >> 8) & 0xFF;
-        data[4] = (source.base >> 16) & 0xFF;
-        data[7] = (source.base >> 24) & 0xFF;
-    }
-    inline void limit(uint32_t limit) {
-        target[0] = source.limit & 0xFF;
-        target[1] = (source.limit >> 8) & 0xFF;
-        target[6] |= (source.limit >> 16) & 0xF;
-    }
-} GDTEntry;
+    inline void base(uint32_t base);
+    inline void limit(uint32_t limit);
+
+} GDTEntryType;
 
 typedef struct {
-// fill in with access bits and params
+    uint8_t data;
+    inline uint8_t present();
+
 } GDTEntryAccessByte;
 
 
-GDTEntry GDT[256];
+extern GDTDescriptorType GDTDescriptor;
+extern GDTEntryType GDT[256];
 
-static void GDTInit() {
-    GDT[0]
 
-}
-
+extern void GDTInit();
 #endif

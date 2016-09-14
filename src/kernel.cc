@@ -6,24 +6,23 @@
 #include <CVGATerminal.h>
 #include <PlatformX86.h>
 
-auto platform = PlatformX86();
+PlatformX86 platform = PlatformX86();
 
 
 extern "C"
 void kernel_start(void) {
-	VGATerminal.init();
 
-	VGATerminal.printf("[husk] kernel init\n");
-	VGATerminal.printf("\n");
-	VGATerminal.printf("This is a test\n");
-	VGATerminal.printf("This is a test\n");
-	VGATerminal.printf("This is a test\n");
-	VGATerminal.printf("This is a test\n");
-	VGATerminal.printf("This is a test\n");
-	VGATerminal.printf("This is a test\n");
-	VGATerminal.printf("This is a test\n");
-	VGATerminal.printf("This is a test\n");
-	VGATerminal.printf("This is a test\n");
+	platform.printk("[husk] Platform Initialized\n");
+	platform.printk("\n");
+	platform.printk("This is a test\n");
+	platform.printk("This is a test\n");
+	platform.printk("This is a test\n");
+	platform.printk("This is a test\n");
+	platform.printk("This is a test\n");
+	platform.printk("This is a test\n");
+	platform.printk("This is a test\n");
+	platform.printk("This is a test\n");
+	platform.printk("This is a test\n");
 
 	for(;;) {
 		asm("hlt");

@@ -5,6 +5,8 @@
 #define asm __asm__
 #define volatile __volatile__
 
+extern PlatformX86 platform;
+
 void outb(uint16_t port, uint8_t val) {
     asm volatile ( "outb %0, %1" : : "a"(val), "Nd"(port) );
 }
@@ -17,7 +19,13 @@ uint8_t inb(uint16_t port) {
    return ret;
 }
 
-void PlatformX86::init() {
+void PlatformX86::printk(char *str) {
+    this->vga.printf(str);
+}
+
+PlatformX86::PlatformX86() {
+    this->vga.init();
+    platform.printk("[PlatformX86] Platform Initialization\n");
 // @placeholder
 //
 //     Step by step, now that you've grabbed the whole thing and know what's to be done:
@@ -28,7 +36,7 @@ void PlatformX86::init() {
 // Put the addresses of the ISR handlers in the appropriate descriptors (in Interrupt Descriptor Table)
 // Enable all supported interrupts in the IRQ mask (of the PIC)
 
-    // GDT::Init();
+    GDTInit();
     // IDT::Init();
     // PIC::Init();
 
