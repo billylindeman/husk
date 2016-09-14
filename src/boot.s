@@ -63,6 +63,7 @@ _start:
 	# yet. The GDT should be loaded here. Paging should be enabled here.
 	# C++ features such as global constructors and exceptions will require
 	# runtime support to work as well.
+	call _init
 
 	# Enter the high-level kernel. The ABI requires the stack is 16-byte
 	# aligned at the time of the call instruction (which afterwards pushes
@@ -70,7 +71,8 @@ _start:
 	# aligned above and we've since pushed a multiple of 16 bytes to the
 	# stack since (pushed 0 bytes so far) and the alignment is thus
 	# preserved and the call is well defined.
-	call kernel_main
+
+	call kernel_start
 
 	# If the system has nothing more to do, put the computer into an
 	# infinite loop. To do that:

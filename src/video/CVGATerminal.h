@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#include "../string.h"
+#include <string.h>
 
 typedef enum kVgaColor {
 	kVgaColorBlack = 0,

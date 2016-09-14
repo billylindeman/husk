@@ -1,8 +1,7 @@
-#include "CVGATerminal.h"
+#include <CVGATerminal.h>
 
-extern "C" {
-    #include "../outport.h"
-}
+#include <PlatformX86.h>
+
 
 inline uint16_t Cursor::index() {
     return (y*kVGATerminalWidth) + x;
@@ -23,10 +22,10 @@ inline void Cursor::increment() {
 }
 
 inline void Cursor::updateBiosCursorReference() {
-    outportb(0x3D4, 0x0F);
-    outportb(0x3D5, (uint8_t) (this->index() & 0xFF) );
-    outportb(0x3D4, 0x0E);
-    outportb(0x3D5, (uint8_t) (this->index() >> 8) & 0xFF);
+    outb(0x3D4, 0x0F);
+    outb(0x3D5, (uint8_t) (this->index() & 0xFF) );
+    outb(0x3D4, 0x0E);
+    outb(0x3D5, (uint8_t) (this->index() >> 8) & 0xFF);
 }
 
 void CVGATerminal::init() {
@@ -68,10 +67,10 @@ void CVGATerminal::clear() {
 }
 
 void CVGATerminal::updateBiosCursorReference() {
-    outportb(0x3D4, 0x0F);
-    outportb(0x3D5, (uint8_t) (this->cursor.index() & 0xFF) );
-    outportb(0x3D4, 0x0E);
-    outportb(0x3D5, (uint8_t) (this->cursor.index() >> 8) & 0xFF);
+    outb(0x3D4, 0x0F);
+    outb(0x3D5, (uint8_t) (this->cursor.index() & 0xFF) );
+    outb(0x3D4, 0x0E);
+    outb(0x3D5, (uint8_t) (this->cursor.index() >> 8) & 0xFF);
 }
 
 

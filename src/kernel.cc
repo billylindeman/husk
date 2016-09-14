@@ -3,12 +3,15 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "video/CVGATerminal.h"
+#include <CVGATerminal.h>
+#include <PlatformX86.h>
+
+auto platform = PlatformX86();
+
 
 extern "C"
-void kernel_main(void) {
+void kernel_start(void) {
 	VGATerminal.init();
-	VGATerminal.clear();
 
 	VGATerminal.printf("[husk] kernel init\n");
 	VGATerminal.printf("\n");

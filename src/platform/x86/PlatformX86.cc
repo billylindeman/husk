@@ -1,6 +1,23 @@
 #include <PlatformX86.h>
 
-void PlatformImplX86::init() {
+#include <GDT.h>
+
+#define asm __asm__
+#define volatile __volatile__
+
+void outb(uint16_t port, uint8_t val) {
+    asm volatile ( "outb %0, %1" : : "a"(val), "Nd"(port) );
+}
+
+uint8_t inb(uint16_t port) {
+    uint8_t ret;
+    asm volatile ( "inb %1, %0"
+               : "=a"(ret)
+               : "Nd"(port) );
+   return ret;
+}
+
+void PlatformX86::init() {
 // @placeholder
 //
 //     Step by step, now that you've grabbed the whole thing and know what's to be done:
