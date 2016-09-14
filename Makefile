@@ -43,8 +43,13 @@ LD  := $(TARGET)ld
 husk-kernel: ${OBJS}
 	$(CXX) ${CFLAGS} ${CXXFLAGS}-T linker.ld -o $(@).bin ${OBJS}
 
-run:
+run: husk-kernel
 	qemu-system-i386 -kernel husk-kernel.bin
+
+debug: husk-kernel
+	qemu-system-i386 -kernel husk-kernel.bin -S -s &
+	gdb -ex "file husk-kernel.bin" \
+		-ex "target remote localhost:1234"
 
 all: husk-kernel
 

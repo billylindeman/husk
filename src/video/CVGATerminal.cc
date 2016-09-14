@@ -37,8 +37,9 @@ void CVGATerminal::init() {
             _buffer[x+y].setColor(kVgaColorLightGrey, kVgaColorBlack);
         }
     }
-
     clear();
+
+    this->printf("[VGATerminal] initialized");
 }
 
 void CVGATerminal::putChar(char c) {

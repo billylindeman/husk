@@ -6,8 +6,8 @@
 #include <CVGATerminal.h>
 #include <PlatformX86.h>
 
-PlatformX86 platform = PlatformX86();
 
+PlatformX86 platform = PlatformX86();
 
 extern "C"
 void kernel_start(void) {
