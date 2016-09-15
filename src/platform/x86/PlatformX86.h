@@ -18,6 +18,9 @@ public:
 extern "C" {
     void outb(uint16_t port, uint8_t val);
     uint8_t inb(uint16_t port);
+
+    void X86InterruptsEnable();
+    void X86InterruptsDisable();
 }
 
 extern PlatformX86 platform;

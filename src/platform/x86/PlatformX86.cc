@@ -19,6 +19,13 @@ uint8_t inb(uint16_t port) {
    return ret;
 }
 
+void X86InterruptsDisable(){
+    asm ("sti");
+}
+void X86InterruptsEnable(){
+    asm ("cli");
+}
+
 void PlatformX86::printk(char *str) {
     this->vga.printf(str);
 }

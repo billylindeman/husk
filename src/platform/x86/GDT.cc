@@ -8,8 +8,11 @@
 #define volatile __volatile__
 
 
-GDTDescriptorType GDTDescriptor;
-GDTEntryType GDT[256];
+
+
+static GDTDescriptorType GDTDescriptor;
+static GDTEntryType GDT[256] __attribute__((packed));
+extern "C" void _GDTFlushInternal(GDTDescriptorType* gdtptr);
 
 void GDTInit() {
     platform.printk("[GDT] Initizing GDTR\n");
@@ -17,9 +20,8 @@ void GDTInit() {
     GDTDescriptor.size = sizeof(GDT);
 
     /** Install GDT descriptor into GDTR */
-    asm volatile("lgdt (%0)" :: "r"(&GDTDescriptor) );
 
-    platform.printk("[GDT] Setting up memory map.");
+    platform.printk("[GDT] Setting up memory map\n");
 
     GDT[0].base(0);
     GDT[0].limit(0);
@@ -33,17 +35,11 @@ void GDTInit() {
     GDT[2].limit(0xFFFFFFFF);
     GDT[2].accessByte(kGDTAccessByteData);
 
-    GDTFlush();
-}
+    X86InterruptsDisable();
+    _GDTFlushInternal(&GDTDescriptor);
+//    asm volatile("lgdt (%0)" :: "r"(&GDTDescriptor) );
+    X86InterruptsEnable();
 
-void GDTFlush() {
-//     asm volatile ("jmp 0x08:GDTFlushHandler");
-// GDTFlushHandler:
-//     asm ("mov %ax, 0x10");
-//     asm ("mov %ds, %ax");
-//     asm ("mov %es, %ax");
-//     asm ("mov %fs, ax");
-//     asm ("mov %ss, ax");
 }
 
 inline void GDTEntryType::base(uint32_t base) {

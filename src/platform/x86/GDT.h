@@ -9,12 +9,10 @@ typedef struct {
 } __attribute__((__packed__)) GDTDescriptorType;
 
 
-
 typedef uint8_t GDTEntryAccessByte;
 
 static const GDTEntryAccessByte kGDTAccessByteCode = 0x9A;
 static const GDTEntryAccessByte kGDTAccessByteData = 0x92;
-
 
 
 typedef struct GDTEntryType {
@@ -36,5 +34,4 @@ extern GDTEntryType GDT[256];
 
 extern void GDTInit();
 extern void GDTFlush();
-
 #endif
