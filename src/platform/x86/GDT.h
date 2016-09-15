@@ -8,19 +8,26 @@ typedef struct {
     uint32_t offset;
 } __attribute__((__packed__)) GDTDescriptorType;
 
-typedef struct {
+
+
+typedef uint8_t GDTEntryAccessByte;
+
+static const GDTEntryAccessByte kGDTAccessByteCode = 0x9A;
+static const GDTEntryAccessByte kGDTAccessByteData = 0x92;
+
+
+
+typedef struct GDTEntryType {
     uint8_t data[8];
 
+//    inline void config(uint32_t base, uint32_t limit, GDTEntryAccessByte accessByte);
     inline void base(uint32_t base);
     inline void limit(uint32_t limit);
+    inline void accessByte(GDTEntryAccessByte accessByte);
 
 } GDTEntryType;
 
-typedef struct {
-    uint8_t data;
-    inline uint8_t present();
-
-} GDTEntryAccessByte;
+//const GDTEntryAccessByte kGDTAccessByteTss = 0x89
 
 
 extern GDTDescriptorType GDTDescriptor;
@@ -28,4 +35,6 @@ extern GDTEntryType GDT[256];
 
 
 extern void GDTInit();
+extern void GDTFlush();
+
 #endif

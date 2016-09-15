@@ -1,7 +1,12 @@
 
+
 #include <GDT.h>
 
 #include <PlatformX86.h>
+
+#define asm __asm__
+#define volatile __volatile__
+
 
 GDTDescriptorType GDTDescriptor;
 GDTEntryType GDT[256];
@@ -11,7 +16,34 @@ void GDTInit() {
     GDTDescriptor.offset = (uint32_t)&GDT;
     GDTDescriptor.size = sizeof(GDT);
 
-    __asm__ volatile("lgdt (%0)" :: "r"(&GDTDescriptor) );
+    /** Install GDT descriptor into GDTR */
+    asm volatile("lgdt (%0)" :: "r"(&GDTDescriptor) );
+
+    platform.printk("[GDT] Setting up memory map.");
+
+    GDT[0].base(0);
+    GDT[0].limit(0);
+    GDT[0].accessByte(0);
+
+    GDT[1].base(0);
+    GDT[1].limit(0xFFFFFFFF);
+    GDT[1].accessByte(kGDTAccessByteCode);
+
+    GDT[2].base(0);
+    GDT[2].limit(0xFFFFFFFF);
+    GDT[2].accessByte(kGDTAccessByteData);
+
+    GDTFlush();
+}
+
+void GDTFlush() {
+//     asm volatile ("jmp 0x08:GDTFlushHandler");
+// GDTFlushHandler:
+//     asm ("mov %ax, 0x10");
+//     asm ("mov %ds, %ax");
+//     asm ("mov %es, %ax");
+//     asm ("mov %fs, ax");
+//     asm ("mov %ss, ax");
 }
 
 inline void GDTEntryType::base(uint32_t base) {
@@ -27,6 +59,10 @@ inline void GDTEntryType::limit(uint32_t limit) {
     data[6] |= (limit >> 16) & 0xF;
 }
 
-inline uint8_t GDTEntryAccessByte::present() {
-    return data & 0b100000;
+inline void GDTEntryType::accessByte(GDTEntryAccessByte accessByte) {
+    data[5] = accessByte;
 }
+//
+// inline uint8_t GDTEntryAccessByte::present() {
+//     return data & 0b100000;
+// }

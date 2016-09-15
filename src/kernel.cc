@@ -14,6 +14,7 @@ void kernel_start(void) {
 
 	platform.init();
 
+
 	platform.printk("[husk] Platform Initialized\n");
 	platform.printk("\n");
 	platform.printk("This is a test\n");
