@@ -26,6 +26,7 @@ CC  := $(TARGET)gcc
 CXX := $(TARGET)g++
 CPP := $(TARGET)cpp
 LD  := $(TARGET)ld
+GDB := $(TARGET)gdb
 
 ## OBJECT TARGETS
 %.o: %.c
@@ -48,7 +49,7 @@ run: husk-kernel
 
 debug: husk-kernel
 	qemu-system-i386 -kernel husk-kernel.bin -S -s &
-	gdb -ex "file husk-kernel.bin" \
+	${GDB} -ex "file husk-kernel.bin" \
 		-ex "target remote localhost:1234"
 
 all: husk-kernel
