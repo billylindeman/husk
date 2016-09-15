@@ -18,14 +18,12 @@ static const GDTEntryAccessByte kGDTAccessByteData = 0x92;
 typedef struct GDTEntryType {
     uint8_t data[8];
 
-//    inline void config(uint32_t base, uint32_t limit, GDTEntryAccessByte accessByte);
     inline void base(uint32_t base);
     inline void limit(uint32_t limit);
     inline void accessByte(GDTEntryAccessByte accessByte);
+    inline void flags(uint8_t sizeBit, uint8_t granularityBit);
 
 } GDTEntryType;
-
-//const GDTEntryAccessByte kGDTAccessByteTss = 0x89
 
 
 extern GDTDescriptorType GDTDescriptor;

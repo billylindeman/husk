@@ -11,8 +11,8 @@
 
 
 static GDTDescriptorType GDTDescriptor;
-static GDTEntryType GDT[256] __attribute__((packed));
-extern "C" void _GDTFlushInternal(GDTDescriptorType* gdtptr);
+GDTEntryType GDT[256];
+extern void GDTFlushInternal();
 
 void GDTInit() {
     platform.printk("[GDT] Initizing GDTR\n");
@@ -30,16 +30,28 @@ void GDTInit() {
     GDT[1].base(0);
     GDT[1].limit(0xFFFFFFFF);
     GDT[1].accessByte(kGDTAccessByteCode);
+    GDT[1].flags(1,1);
 
     GDT[2].base(0);
     GDT[2].limit(0xFFFFFFFF);
     GDT[2].accessByte(kGDTAccessByteData);
+    GDT[2].flags(1,1);
 
     X86InterruptsDisable();
-    _GDTFlushInternal(&GDTDescriptor);
-//    asm volatile("lgdt (%0)" :: "r"(&GDTDescriptor) );
+    GDTFlushInternal();
     X86InterruptsEnable();
+}
 
+void GDTFlushInternal() {
+    asm volatile("lgdt (%0)" :: "r"(&GDTDescriptor) );
+    asm goto ("jmp $0x08, %0" :::: _GDTFlushRet);
+_GDTFlushRet:
+    asm ("mov $0x10, %ax");
+    asm ("mov %ax, %ds");
+    asm ("mov %ax, %es");
+    asm ("mov %ax, %fs");
+    asm ("mov %ax, %gs");
+    asm ("mov %ax, %ss");
 }
 
 inline void GDTEntryType::base(uint32_t base) {
@@ -53,6 +65,11 @@ inline void GDTEntryType::limit(uint32_t limit) {
     data[0] = limit & 0xFF;
     data[1] = (limit >> 8) & 0xFF;
     data[6] |= (limit >> 16) & 0xF;
+}
+
+inline void GDTEntryType::flags(uint8_t sizeBit, uint8_t granularityBit) {
+    data[6] |= (sizeBit & 0x1 << 6) & 0xF0;
+    data[6] |= (granularityBit & 0x1 << 7) & 0xF0;
 }
 
 inline void GDTEntryType::accessByte(GDTEntryAccessByte accessByte) {
