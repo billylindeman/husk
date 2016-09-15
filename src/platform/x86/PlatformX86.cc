@@ -23,7 +23,7 @@ void PlatformX86::printk(char *str) {
     this->vga.printf(str);
 }
 
-PlatformX86::PlatformX86() {
+void PlatformX86::init() {
     this->vga.init();
     platform.printk("[PlatformX86] Platform Initialization\n");
 // @placeholder

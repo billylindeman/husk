@@ -11,7 +11,6 @@ class PlatformX86 : IPlatform<PlatformX86> {
 private:
     CVGATerminal vga;
 public:
-    PlatformX86();
     void init();
     void printk(char *str);
 };

@@ -39,7 +39,7 @@ void CVGATerminal::init() {
     }
     clear();
 
-    this->printf("[VGATerminal] initialized");
+    this->printf("[VGATerminal] initialized\n");
 }
 
 void CVGATerminal::putChar(char c) {
