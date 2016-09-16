@@ -22,7 +22,7 @@ typedef struct GDTEntryType {
     uint8_t access;
     uint8_t granularity;
     uint8_t base_high;
-    inline void set(uint32_t base, uint32_t limit, uint8_t access, uint8_t granularity);
+    inline void configure(uint32_t base, uint32_t limit, uint8_t access, uint8_t granularity);
 } GDTEntryType;
 
 

@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define asm __asm__
+#define volatile __volatile__
 
 #include <IPlatform.h>
 #include <CVGATerminal.h>
@@ -12,7 +14,8 @@ private:
     CVGATerminal vga;
 public:
     void init();
-    void printk(char *str);
+    void printk(const char *str);
+    void halt();
 };
 
 extern "C" {

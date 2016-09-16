@@ -1,9 +1,7 @@
 #include <PlatformX86.h>
 
 #include <GDT.h>
-
-#define asm __asm__
-#define volatile __volatile__
+#include <IDT.h>
 
 extern PlatformX86 platform;
 
@@ -26,7 +24,7 @@ void X86InterruptsEnable(){
     asm ("cli");
 }
 
-void PlatformX86::printk(char *str) {
+void PlatformX86::printk(const char *str) {
     this->vga.printf(str);
 }
 
@@ -44,7 +42,14 @@ void PlatformX86::init() {
 // Enable all supported interrupts in the IRQ mask (of the PIC)
 
     GDTInit();
+    IDTInit();
     // IDT::Init();
     // PIC::Init();
 
+}
+
+void PlatformX86::halt(){
+    for(;;) {
+        asm ("hlt");
+    }
 }

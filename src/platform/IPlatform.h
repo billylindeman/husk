@@ -10,6 +10,10 @@ class IPlatform {
     void printk(const char *format) {
         static_cast<PlatformImpl*>(this)->printf(format);
     }
+
+    void halt() {
+        static_cast<PlatformImpl*>(this)->halt();
+    }
 };
 
 #endif

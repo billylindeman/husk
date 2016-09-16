@@ -49,6 +49,7 @@ typedef struct {
 
 	inline uint16_t index();
 	inline void move(uint8_t x, uint8_t y);
+	inline void tab();
 	inline void nextLine();
 	inline void increment();
 	inline void updateBiosCursorReference();
@@ -65,7 +66,7 @@ public:
 	void init();
 	void putChar(char c);
     void moveCursor(uint8_t x, uint8_t y);
-    void printf(char *str);
+    void printf(const char *str);
     void clear();
 
 };

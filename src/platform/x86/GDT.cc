@@ -4,13 +4,7 @@
 
 #include <PlatformX86.h>
 
-#define asm __asm__
-#define volatile __volatile__
-
-
-
-
-static GDTDescriptorType GDTDescriptor;
+GDTDescriptorType GDTDescriptor;
 GDTEntryType GDT[3];
 extern void GDTFlushInternal();
 
@@ -20,15 +14,16 @@ void GDTInit() {
     GDTDescriptor.size = sizeof(GDT);
 
     /** Install GDT descriptor into GDTR */
-    platform.printk("[GDT] Setting up memory segments:\n");
+    platform.printk("[GDT] Setting up memory segments\n");
+    GDT[0].configure(0,0,0,0);
+    GDT[1].configure(0,0xFFFFFFFF,kGDTAccessByteCode, 0xCF);
+    GDT[2].configure(0,0xFFFFFFFF,kGDTAccessByteData, 0xCF);
 
-    GDT[0].set(0,0,0,0);
-    GDT[1].set(0,0xFFFFFFFF,kGDTAccessByteCode, 0xCF);
-    GDT[2].set(0,0xFFFFFFFF,kGDTAccessByteData, 0xCF);
 
     X86InterruptsDisable();
     GDTFlushInternal();
     X86InterruptsEnable();
+    platform.printk("[GDT] Flush Complete\n");
 }
 
 void GDTFlushInternal() {
@@ -43,7 +38,7 @@ _GDTFlushRet:
     asm ("mov %ax, %ss");
 }
 
-inline void GDTEntryType::set(uint32_t base, uint32_t limit, uint8_t access, uint8_t granularity) {
+inline void GDTEntryType::configure(uint32_t base, uint32_t limit, uint8_t access, uint8_t granularity) {
     this->base_low = (base & 0xFFFF);
     this->base_middle = (base >> 16) & 0xFF;
     this->base_high = (base >> 24) & 0xFF;

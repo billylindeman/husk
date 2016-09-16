@@ -27,7 +27,6 @@ void kernel_start(void) {
 	platform.printk("This is a test\n");
 	platform.printk("This is a test\n");
 
-	for(;;) {
-		asm("hlt");
-	}
+
+	platform.halt();
 }

@@ -12,6 +12,12 @@ inline void Cursor::move(uint8_t x, uint8_t y) {
     this->updateBiosCursorReference();
 }
 
+inline void Cursor::tab() {
+    this->x += 4;
+    this->x -= (this->x%4);
+    this->updateBiosCursorReference();
+}
+
 inline void Cursor::nextLine() {
     this->move(0, this->y+1);
 }
@@ -45,6 +51,8 @@ void CVGATerminal::init() {
 void CVGATerminal::putChar(char c) {
     if(c == '\n') {
         cursor.nextLine();
+    }else if(c == '\t') {
+        cursor.tab();
     }else {
         this->_buffer[cursor.index()].setChar(c);
         cursor.increment();
@@ -55,7 +63,7 @@ void CVGATerminal::moveCursor(uint8_t x, uint8_t y) {
     this->cursor.move(x,y);
 }
 
-void CVGATerminal::printf(char *str) {
+void CVGATerminal::printf(const char *str) {
     for(size_t i=0; i<strlen(str); i++ ){
         putChar(str[i]);
     }
