@@ -4,15 +4,21 @@
 Husk is a small toy operating system I am developing.  My goals are to develop a basic multi-platform (arm, x86) os kernel and libc/c++, and to make it as easy to understand as possible.
 
 # basic system x86 todo:
-[ ] Init GDT with basic flat layout for now
+[x] Init GDT with basic flat layout for now
 
-[ ] Enable paging in boot.s
+[x] Init IDT
 
-[ ] Init IDT
+[ ] Setup ISR assembly stubs for X86 fault handler and add kernel panics
+
+[ ] Enable paging
+
+[ ] PIC Driver / Initialization
+
+[ ] PIT Driver / Initialization
 
 [ ] Setup Keyboard handler using IDT
 
-[ ] Maybe initialize PIC/APIC
+
 
 ## goals
 - Platform Abstraction System
