@@ -8,7 +8,9 @@ Husk is a small toy operating system I am developing.  My goals are to develop a
 
 [x] Init IDT
 
-[ ] Setup ISR assembly stubs for X86 fault handler and add kernel panics
+[x] Successfully execute software interrupts
+
+[-] Wrap ISR assembly stubs for X86 fault handler and forward upstream to a kernel panic
 
 [ ] Enable paging
 
