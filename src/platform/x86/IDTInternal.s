@@ -1,5 +1,7 @@
 
-.isr_common_stub:
+.section .text
+.global _IDTInternalFaultHandler
+_IDTInternalFaultHandler:
     pusha
     push %ds
     push %es
@@ -11,12 +13,20 @@
     mov %ax, %fs
     mov %ax, %gs
     mov %esp, %eax
-    call _IDTInternalFaultHandler
+    call _IDTFaultHandler
     pop %eax
     pop %gs
     pop %fs
     pop %es
     pop %ds
     popa
-    add $8, esp
+    add $8, %esp
+    iret
+
+
+.global _ISRInternal
+_ISRInternal:
+    pushal
+    call isr
+    popal
     iret

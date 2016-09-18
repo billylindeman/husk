@@ -28,5 +28,10 @@ void kernel_start(void) {
 	platform.printk("This is a test\n");
 
 
+	asm ("int $49");
+
 	platform.halt();
+
+
+
 }

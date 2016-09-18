@@ -7,9 +7,10 @@ IDTEntry IDT[256];
 
 extern void do_test();
 extern "C" void _IDTInternalFaultHandler(void);
+extern "C" void _ISRInternal(void);
 
 extern "C" void isr() {
-    platform.printk("isr called");
+    platform.printk("INT $0x40 Triggered!\n");
 }
 
 void IDTInit() {
@@ -29,7 +30,7 @@ void IDTInit() {
         IDT[i].configure((uint32_t)&_IDTInternalFaultHandler, 0x8, kIDTGateTypeInterrupt32);
     }
 
-    IDT[49].configure((uint32_t)&_IDTInternalFaultHandler, 0x8, kIDTGateTypeInterrupt32);
+    IDT[49].configure((uint32_t)&_ISRInternal, 0x8, kIDTGateTypeInterrupt32);
     asm volatile("lidt (%0)" :: "r"(&IDTDescriptor) );
 
     platform.printk("[IDT] Triggering int $49\n");
