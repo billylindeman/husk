@@ -17,6 +17,7 @@ OBJS += $(shell $(CC) $(CFLAGS) -print-file-name=crtbegin.o)
 OBJS += $(shell $(CC) $(CFLAGS) -print-file-name=crtend.o)
 
 #TOOLCHAIN CONFIG
+ASFlags  := -gstabs+
 CFLAGS   := -std=c++11 -ffreestanding -O2 -Wall -Wextra -fno-exceptions -fno-rtti -nostdlib -fpermissive -g
 CXXFLAGS :=
 
@@ -36,7 +37,7 @@ GDB := $(TARGET)gdb
 	${CXX} ${CFLAGS} ${CXXFLAGS} ${INCLUDE} -c $< -o $@
 
 %.o: %.s
-	${AS} $< -o $@
+	${AS} ${ASFLAGS} $< -o $@
 
 
 

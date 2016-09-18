@@ -5,7 +5,7 @@
 typedef struct {
     uint16_t size;
     uint32_t offset;
-} IDTDescriptorType;
+} __attribute__((__packed__)) IDTDescriptorType;
 
 typedef struct {
    uint16_t offset_1; // offset bits 0..15
@@ -31,7 +31,5 @@ extern IDTEntry IDT[256];
 extern "C" {
     void IDTInit();
 }
-
-
 
 #endif
