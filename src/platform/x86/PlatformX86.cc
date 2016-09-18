@@ -43,7 +43,6 @@ void PlatformX86::init() {
 
     GDTInit();
     IDTInit();
-    // IDT::Init();
     // PIC::Init();
 
 }

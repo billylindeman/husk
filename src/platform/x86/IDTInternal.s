@@ -23,7 +23,6 @@ _IDTInternalFaultHandler:
     add $8, %esp
     iret
 
-
 .global _ISRInternal
 _ISRInternal:
     pushal
