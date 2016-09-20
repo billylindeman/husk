@@ -29,3 +29,10 @@ _ISRInternal:
     call isr
     popal
     iret
+
+.global _IRQInternal
+_IRQInternal:
+    pushal
+    call irq
+    popal
+    iret

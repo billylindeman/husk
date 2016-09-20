@@ -8,31 +8,40 @@ IDTEntry IDT[256];
 extern void do_test();
 extern "C" void _IDTInternalFaultHandler(void);
 extern "C" void _ISRInternal(void);
+extern "C" void _IRQInternal(void);
 
 extern "C" void isr() {
     platform.printk("INT $49 Triggered!\n");
+}
+extern "C" void irq() {
+    platform.printk("IRQ Triggered!\n");
 }
 
 void IDTInit() {
     platform.printk("[IDT] Initializing\n");
 
     X86InterruptsDisable();
-
     IDTDescriptor.offset = (uint32_t)&IDT;
     IDTDescriptor.size = sizeof(IDT);
 
-    X86InterruptsEnable();
 
     platform.printk("[IDT] Configuring fault handlers\n");
     for(int i=0; i<31; i++) {
         IDT[i].configure((uint32_t)&_IDTInternalFaultHandler, 0x8, kIDTGateTypeInterrupt32);
     }
 
+    platform.printk("[IDT] Configuring IRQ handlers");
+    for(int i=0; i<16; i++) {
+        IDT[31+i].configure((uint32_t)&_IRQInternal, 0x8, kIDTGateTypeInterrupt32);
+    }
+
+
     platform.printk("[IDT] Installing test handler into 49\n");
     IDT[49].configure((uint32_t)&_ISRInternal, 0x8, kIDTGateTypeInterrupt32);
 
     platform.printk("[IDT] Setting IDT Descriptor\n");
     asm volatile("lidt (%0)" :: "r"(&IDTDescriptor) );
+    X86InterruptsEnable();
 
     platform.printk("[IDT] Triggering int $49\n");
     asm ("int $49");

@@ -2,6 +2,7 @@
 
 #include <GDT.h>
 #include <IDT.h>
+#include <PIC.h>
 
 extern PlatformX86 platform;
 
@@ -43,7 +44,7 @@ void PlatformX86::init() {
 
     GDTInit();
     IDTInit();
-    // PIC::Init();
+    PIC.init();
 
 }
 
