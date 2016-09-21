@@ -52,6 +52,7 @@ typedef struct {
 	inline void tab();
 	inline void nextLine();
 	inline void increment();
+	inline bool atEnd();
 	inline void updateBiosCursorReference();
 } Cursor;
 
@@ -65,6 +66,7 @@ public:
 
 	void init();
 	void putChar(char c);
+    void scroll();
     void moveCursor(uint8_t x, uint8_t y);
     void printf(const char *str);
     void clear();

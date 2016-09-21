@@ -19,10 +19,10 @@ uint8_t inb(uint16_t port) {
 }
 
 void X86InterruptsDisable(){
-    asm ("sti");
+    asm ("cli");
 }
 void X86InterruptsEnable(){
-    asm ("cli");
+    asm ("sti");
 }
 
 void PlatformX86::printk(const char *str) {
@@ -32,19 +32,13 @@ void PlatformX86::printk(const char *str) {
 void PlatformX86::init() {
     this->vga.init();
     platform.printk("[PlatformX86] Platform Initialization\n");
-// @placeholder
-//
-//     Step by step, now that you've grabbed the whole thing and know what's to be done:
-// Make space for the interrupt descriptor table
-// Tell the CPU where that space is (see GDT Tutorial: lidt works the very same way as lgdt)
-// Tell the PIC that you no longer want to use the BIOS defaults (see Programming the PIC chips)
-// Write a couple of ISR handlers (see Interrupt Service Routines) for both IRQs and exceptions
-// Put the addresses of the ISR handlers in the appropriate descriptors (in Interrupt Descriptor Table)
-// Enable all supported interrupts in the IRQ mask (of the PIC)
 
     GDTInit();
     IDTInit();
     PIC.init();
+
+    PIC.unmask(2);
+    PIC.unmask(0);
 
 }
 

@@ -14,7 +14,10 @@ const uint8_t kPIC2BaseAddress = 0xA0;
 const uint8_t kPIC2CommandPort = kPIC2BaseAddress;
 const uint8_t kPIC2DataPort    = (kPIC2BaseAddress+2);
 
-const uint8_t kPICICW1_ICW1              = 0x01;  /** ICW4 (not) needed           */
+
+const uint8_t kPICCommandEOI             = 0x20;
+
+const uint8_t kPICICW1UseICW4            = 0x01;  /** ICW4 (not) needed           */
 const uint8_t kPICICW1Single             = 0x02;  /** Single (cascade) mode       */
 const uint8_t kPICICW1Interval4          = 0x04;  /** Call address inverval 4 (8) */
 const uint8_t kPICICW1Level              = 0x08;  /** Level triggered (edge) mode */
@@ -32,7 +35,10 @@ class CPIC {
 public:
     static void init();
     static void remap(uint8_t pic1Vector, uint8_t pic2Vector);
-    static void eoiForIrq(uint8_t irq);
+    static void eoi(uint8_t irq);
+
+    static void mask(uint8_t irq);
+    static void unmask(uint8_t irq);
 };
 
 extern CPIC PIC;

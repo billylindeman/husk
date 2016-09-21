@@ -22,8 +22,15 @@ inline void Cursor::nextLine() {
     this->move(0, this->y+1);
 }
 
+inline bool Cursor::atEnd() {
+    return y == kVGATerminalHeight;
+}
+
 inline void Cursor::increment() {
     x+=1;
+    if(x >= kVGATerminalWidth) {
+        x=0; y+=1;
+    }
     updateBiosCursorReference();
 }
 
@@ -48,14 +55,25 @@ void CVGATerminal::init() {
     this->printf("[VGATerminal] initialized\n");
 }
 
+void CVGATerminal::scroll() {
+    // for(int i=0; i<(kVGATerminalHeight-1); i++) {
+    //     for(int j=0; j<kVGATerminalWidth; j++) {
+    //         this->_buffer[(i*kVGATerminalWidth)+j].character = (this->_buffer[((i+1)*kVGATerminalWidth) + j].character);
+    //         this->_buffer[(i*kVGATerminalWidth)+j].color = (this->_buffer[((i+1)*kVGATerminalWidth) + j].color);
+    //     }
+    // }
+}
+
 void CVGATerminal::putChar(char c) {
     if(c == '\n') {
+        if( cursor.atEnd() ) clear();
         cursor.nextLine();
     }else if(c == '\t') {
         cursor.tab();
     }else {
         this->_buffer[cursor.index()].setChar(c);
         cursor.increment();
+        if( cursor.atEnd() ) clear();
     }
 }
 
@@ -73,6 +91,7 @@ void CVGATerminal::clear() {
     for(int i=0;i<(kVGATerminalWidth*kVGATerminalHeight); i++) {
         this->_buffer[i].setChar(' ');
     }
+    this->moveCursor(0,0);
 }
 
 void CVGATerminal::updateBiosCursorReference() {
