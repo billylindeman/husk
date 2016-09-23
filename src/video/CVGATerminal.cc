@@ -56,24 +56,29 @@ void CVGATerminal::init() {
 }
 
 void CVGATerminal::scroll() {
-    // for(int i=0; i<(kVGATerminalHeight-1); i++) {
-    //     for(int j=0; j<kVGATerminalWidth; j++) {
-    //         this->_buffer[(i*kVGATerminalWidth)+j].character = (this->_buffer[((i+1)*kVGATerminalWidth) + j].character);
-    //         this->_buffer[(i*kVGATerminalWidth)+j].color = (this->_buffer[((i+1)*kVGATerminalWidth) + j].color);
-    //     }
-    // }
+    /** Slide all lines up one to make room for the newline */
+    for(int i=0; i<(kVGATerminalHeight-1); i++) {
+        for(int j=0; j<kVGATerminalWidth; j++) {
+            this->_buffer[(i*kVGATerminalWidth)+j] = (this->_buffer[((i+1)*kVGATerminalWidth) + j]);
+        }
+    }
+    /** Clear newline */
+    for(int x = 0; x < kVGATerminalWidth; x++) {
+        this->_buffer[((kVGATerminalHeight-1)*kVGATerminalWidth)+x].setChar(' ');
+    }
+    moveCursor(0, kVGATerminalHeight-1);
 }
 
 void CVGATerminal::putChar(char c) {
     if(c == '\n') {
-        if( cursor.atEnd() ) clear();
+        if( cursor.atEnd() ) scroll();
         cursor.nextLine();
     }else if(c == '\t') {
         cursor.tab();
     }else {
         this->_buffer[cursor.index()].setChar(c);
         cursor.increment();
-        if( cursor.atEnd() ) clear();
+        if( cursor.atEnd() ) scroll();
     }
 }
 
