@@ -23,9 +23,9 @@ stack_top:
 # modules there. This lets the bootloader know it must avoid the addresses.
 .section .bss, "aw", @nobits
 	.align 4096
-boot_pagedir:
+boot_page_directory:
 	.skip 4096
-boot_pagetab1:
+boot_page_table1:
 	.skip 4096
 # Further page tables may be required if the kernel grows beyond 3 MiB.
 
@@ -34,11 +34,11 @@ boot_pagetab1:
 .global _start
 .type _start, @function
 _start:
-	# Physical address of boot_pagetab1.
+	# Physical address of boot_page_table1.
 	# TODO: I recall seeing some assembly that used a macro to do the
 	#       conversions to and from physical. Maybe this should be done in this
 	#       code as well?
-	movl $(boot_pagetab1 - 0xC0000000), %edi
+	movl $(boot_page_table1 - 0xC0000000), %edi
 	# First address to map is address 0.
 	# TODO: Start at the first kernel page instead. Alternatively map the first
 	#       1 MiB as it can be generally useful, and there's no need to
@@ -63,14 +63,14 @@ _start:
 2:
 	# Size of page is 4096 bytes.
 	addl $4096, %esi
-	# Size of entries in boot_pagetab1 is 4 bytes.
+	# Size of entries in boot_page_table1 is 4 bytes.
 	addl $4, %edi
 	# Loop to the next entry if we haven't finished.
 	loop 1b
 
 3:
 	# Map VGA video memory to 0xC03FF000 as "present, writable".
-	movl $(0x000B8000 | 0x003), boot_pagetab1 - 0xC0000000 + 1023 * 4
+	movl $(0x000B8000 | 0x003), boot_page_table1 - 0xC0000000 + 1023 * 4
 
 	# The page table is used at both page directory entry 0 (virtually from 0x0
 	# to 0x3FFFFF) (thus identity mapping the kernel) and page directory entry
@@ -109,8 +109,10 @@ _start:
 	# Set up the stack.
 	mov $stack_top, %esp
 
+	call _init
+
 	# Enter the high-level kernel.
-	call kernel_main
+	call kernel_start
 
 	# Infinite loop if the system has nothing more to do.
 	cli

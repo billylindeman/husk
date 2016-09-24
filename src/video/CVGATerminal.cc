@@ -42,7 +42,7 @@ inline void Cursor::updateBiosCursorReference() {
 }
 
 void CVGATerminal::init() {
-    this->_buffer = (TermChar*)0xB8000;
+    this->_buffer = (TermChar*)0xC03FF000;
     moveCursor(0,0);
 
     for(int x=0;x<kVGATerminalWidth; x++) {
