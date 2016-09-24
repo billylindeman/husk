@@ -17,7 +17,9 @@ Husk is a small toy operating system I am developing.  My goals are to develop a
     - Currently I'm using a single catchall for Fault handling but it doesn't actually capture which fault triggered it.. this needs to change
     - Same thing for IRQ's
 
-[ ] Enable paging
+[ ] Setup Identity paging and kernel relocation to higher-half
+
+[ ] Setup basic page frame allocator
 
 [ ] Setup Keyboard handler using IDT
 
